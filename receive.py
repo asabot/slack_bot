@@ -1,8 +1,6 @@
 from flask import Flask, request, Response, jsonify
 from flask_slack import Slack
 from app import *
-import json
-
 
 app = Flask(__name__)
 
@@ -43,7 +41,6 @@ def BOTSCO():
 @app.route('/', methods=['GET'])
 def test():
     return Response('It works!')
-
 
 if __name__ == "__main__":
     app.run(debug=True)
