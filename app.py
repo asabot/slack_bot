@@ -20,6 +20,13 @@ def channel_info(channel_id):
     return None
 
 
+def get_latest_message(channel_id):
+    channel_history = slack_client.api_call("channels.history", count = 1, channel=channel_id)
+    if channel_history:
+        return channel_history['messages'][0]
+    return None
+
+
 def get_channel_id_from_name(name):
     channels_ = list_channels()
     if channels_:
@@ -49,6 +56,16 @@ def trump_message(channel_id, message):
         text=message,
         username='rage',
         icon_emoji=':trump_rage:'
+    )
+
+
+def paste_bot_message(channel_id, message, username):
+    slack_client.api_call(
+            "chat.postMessage",
+            channel=channel_id,
+            text=message,
+            username=username,
+            icon_emoji=':clippy:'
     )
 
 
