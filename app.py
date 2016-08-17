@@ -1,7 +1,6 @@
 import os
 from slackclient import SlackClient
 
-
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN', None)
 
 slack_client = SlackClient(SLACK_TOKEN)
@@ -52,17 +51,18 @@ def trump_message(channel_id, message):
         icon_emoji=':trump_rage:'
     )
 
+
 if __name__ == '__main__':
     channels = list_channels()
     if channels:
         print("Channels: ")
-        for channel  in channels:
+        for channel in channels:
             print(channel['name'] + " (" + channel['id'] + ")")
             detailed_info = channel_info(channel['id'])
             if detailed_info:
                 print('Latest text from ' + channel['name'] + ":")
                 # print(detailed_info['latest']['text'])
-	    if channel['name'] == 'bottest':
-		send_message(channel['id'], 'Hello123')
+            if channel['name'] == 'bottest':
+                send_message(channel['id'], 'Hello123')
     else:
         print("Unable to authenticate.")
