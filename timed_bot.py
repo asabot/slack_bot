@@ -11,10 +11,10 @@ def bosco_time(message):
 
 def bosco_init():
     schedule.every().monday.at("13:13").do(bosco_time, "it's an interesting moment")
-    schedule.every().tuesday.at("16:00").do(bosco_time, "it's an interesting moment")
-    schedule.every().wednesday.at("17:15").do(bosco_time, "it's an interesting moment")
+    schedule.every().tuesday.at("16:00").do(bosco_time, "cool dialogue - talk more soon.")
+    schedule.every().wednesday.at("17:15").do(bosco_time, "galactic oportunity for Cisco right now")
     schedule.every().thursday.at("14:15").do(bosco_time, "it's an interesting moment")
-    schedule.every().friday.at("21:00").do(bosco_time, "it's an interesting moment")
+    schedule.every().friday.at("21:00").do(bosco_time, "need to yak - buzz when free.")
     while True:
         schedule.run_pending()
         time.sleep(1)
