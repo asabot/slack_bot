@@ -2,6 +2,7 @@ from flask import Flask, request, Response, jsonify
 from flask_slack import Slack
 from url_parser import *
 from app import *
+import pickle, os
 
 app = Flask(__name__)
 
@@ -16,22 +17,54 @@ def PASTE():
         channel = request.form.get('channel_name')
         username = request.form.get('user_name')
         channel_id = get_channel_id_from_name(channel)
-        message = request.form.get('text')[5:]
-        username = "paste bot"
-        paste_bot_message(channel_id=channel_id, message=message, username=username)
+        username = request.form.get('text')[6:].encode('utf-8')
+        inputFile = "copy.data"
+        if os.path.exists(inputFile):
+            data = open(inputFile, 'r')
+            dataset = pickle.load(data)
+            data.close()
+            print(username)
+            if username in dataset:
+                message = dataset[username]
+            else:
+                message = "No message copied from {}".format(username)
+        else:
+            message = "No data"
+        user_data = user_info(username[2:-1])
+        if user_data is None:
+            return paste_bot_message(channel_id=channel_id, message="User not found", username='Paste Bot')
+        paste_bot_message(channel_id=channel_id, message=message, username=user_data['name'])
         return Response(), 200
 
 
 @app.route('/copy', methods=['POST'])
 def COPY():
     if request.form.get('token') == SLACK_COPY_BOT:
-        username = request.form.get('user_name')
-        message = request.form.get('text').encode('utf-8')
         channel = request.form.get('channel_name')
         channel_id = get_channel_id_from_name(channel)
         previous_message_data = get_latest_message(channel_id)
-        message = previous_message_data['text']
-        user = previous_message_data['user']
+        if 'user' not in previous_message_data:
+            return "Previous message can't be copied. Make sure you are not copying a bot's message!"
+        
+        message = previous_message_data['text'].encode('utf-8')
+        user_id = previous_message_data['user'].encode('utf-8')
+        username = "<@" + user_id + ">"
+        inputFile = 'copy.data'
+        if os.path.exists(inputFile):
+            data = open(inputFile, 'r')
+            dataset = pickle.load(data)
+            data.close()
+
+            data = open(inputFile, 'w')
+            dataset[username] = message
+            pickle.dump(dataset, data)
+            data.close()
+        else:
+            data = open(inputFile, 'w')
+            dataset = {username : message}
+            pickle.dump(dataset, data)
+            data.close
+
         return 'Message Copied!'
 
 

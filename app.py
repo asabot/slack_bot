@@ -20,6 +20,12 @@ def channel_info(channel_id):
     return None
 
 
+def user_info(user_id):
+    user_info = slack_client.api_call("users.info", user=user_id)
+    if user_info['ok']:
+        return user_info['user']
+    return None
+
 def get_latest_message(channel_id):
     channel_history = slack_client.api_call("channels.history", count = 1, channel=channel_id)
     if channel_history:
