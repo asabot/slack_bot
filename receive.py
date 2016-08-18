@@ -23,7 +23,6 @@ def PASTE():
             data = open(inputFile, 'r')
             dataset = pickle.load(data)
             data.close()
-            print(username)
             if username in dataset:
                 message = dataset[username]
             else:
@@ -33,7 +32,7 @@ def PASTE():
         user_data = user_info(username[2:-1])
         if user_data is None:
             return paste_bot_message(channel_id=channel_id, message="User not found", username='Paste Bot')
-        paste_bot_message(channel_id=channel_id, message=message, username=user_data['name'])
+        paste_bot_message(channel_id=channel_id, message=message, username=user_data['name'], icon_url=user_data['profile']['image_1024'])
         return Response(), 200
 
 
@@ -87,11 +86,6 @@ def BOTSCO():
         send_message(channel_id=channel_id, message=request.form.get('text'))
         print("{} took over Botsco and said: {}".format(request.form.get('user_name'), request.form.get('text')))
         return Response(), 200
-
-
-@app.route('/', methods=['GET'])
-def test():
-    return Response('It works!')
 
 
 if __name__ == "__main__":

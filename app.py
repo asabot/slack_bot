@@ -65,14 +65,23 @@ def trump_message(channel_id, message):
     )
 
 
-def paste_bot_message(channel_id, message, username):
-    slack_client.api_call(
+def paste_bot_message(channel_id, message, username = "Paste Bot", icon_url = None):
+    if icon_url is None:
+        slack_client.api_call(
             "chat.postMessage",
             channel=channel_id,
             text=message,
             username=username,
             icon_emoji=':clippy:'
-    )
+        )
+    else:
+        slack_client.api_call(
+            "chat.postMessage",
+            channel=channel_id,
+            text=message,
+            username=username,
+            icon_url=icon_url
+        )
 
 
 if __name__ == '__main__':
