@@ -1,4 +1,4 @@
-import os
+import os, requests
 from slackclient import SlackClient
 
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN', None)
@@ -29,7 +29,8 @@ def user_info(user_id):
 def get_latest_message(channel_id):
     channel_history = slack_client.api_call("channels.history", count = 1, channel=channel_id)
     if channel_history:
-        return channel_history['messages'][0]
+        if 'messages' in channel_history:
+            return channel_history['messages'][0]
     return None
 
 
@@ -83,7 +84,7 @@ def paste_bot_message(channel_id, message, username = "Paste Bot", icon_url = No
             icon_url=icon_url
         )
 
-
+        
 if __name__ == '__main__':
     channels = list_channels()
     if channels:

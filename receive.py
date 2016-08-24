@@ -10,6 +10,16 @@ SLACK_WEBHOOK_SECRET = os.environ.get('SLACK_WEBHOOK_SECRET')
 SLACK_RAGE_BOT = os.environ.get('SLACK_RAGE_BOT')
 SLACK_BOSCO_BOT = os.environ.get('SLACK_BOSCO_BOT')
 SLACK_COPY_BOT = os.environ.get('SLACK_COPY_BOT')
+SLACK_TRAVOLTA_HOOK = os.environ.get('SLACK_TRAVOLTA_HOOK')
+
+
+@app.route('/travolta', methods=['POST'])
+def TRAVOLTAIFY():
+    if request.form.get('token') == SLACK_TRAVOLTA_HOOK:
+        return "message recieved"
+    else:
+        return Response(), 500
+
 
 @app.route('/paste', methods=['POST'])
 def PASTE():
@@ -42,6 +52,9 @@ def COPY():
         channel = request.form.get('channel_name')
         channel_id = get_channel_id_from_name(channel)
         previous_message_data = get_latest_message(channel_id)
+        if previous_message_data is None:
+            return "/copy is not allowed in this channel"
+        
         if 'user' not in previous_message_data:
             return "Previous message can't be copied. Make sure you are not copying a bot's message!"
         
@@ -83,10 +96,10 @@ def BOTSCO():
     if request.form.get('token') == SLACK_BOSCO_BOT:
         channel = request.form.get('channel_name')
         channel_id = get_channel_id_from_name(channel)
-        send_message(channel_id=channel_id, message=request.form.get('text'))
-        print("{} took over Botsco and said: {}".format(request.form.get('user_name'), request.form.get('text')))
+        send_message(channel_id=channel_id, message=request.form.get('text').encode('utf-8'))
+        print("{} took over Botsco and said: {}".format(request.form.get('user_name'), request.form.get('text').encode('utf-8')))
         return Response(), 200
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
