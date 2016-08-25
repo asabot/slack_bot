@@ -15,5 +15,5 @@ Setup:
     * Resource your enviroment and then resource the venv.  
  4. Route the webhook from slack to your server.  
  5. Run the Flask app!
-     * Depending on where you routed the webhook, you may have to change recieve.py to run somewhere else (default is 0.0.0.0:5000
+     * Depending on where you routed the webhook, you may have to change recieve.py to run somewhere else (default is 0.0.0.0:5000)
      * In terminal type: python recieve.py
